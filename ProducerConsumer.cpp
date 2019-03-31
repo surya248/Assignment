@@ -13,7 +13,8 @@ using namespace std;
 int buff[BUFF_SIZE];
 int i=0;
 
-sem_t full,empty;
+sem_t full;
+sem_t empty;
 pthread_mutex_t mutex;
 
 void* produce(void* arg){
@@ -23,7 +24,7 @@ void* produce(void* arg){
 		pthread_mutex_lock(&mutex);
 		int item = rand()%1000;
 		buff[i++] = item;
-		cout<<item<<" has produced "<<endl;
+		cout<<item<<"produced "<<endl;
 		pthread_mutex_unlock(&mutex);
 		sem_post(&full);
 	}
@@ -35,7 +36,7 @@ void* consume(void* arg){
 		sem_wait(&full);
 		pthread_mutex_lock(&mutex);
 		int item = buff[--i];
-		cout<<item<<" has consumed "<<endl;
+		cout<<item<<"consumed "<<endl;
 		pthread_mutex_unlock(&mutex);
 		sem_post(&empty);
 	}
